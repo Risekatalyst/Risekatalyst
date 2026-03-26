@@ -42,7 +42,7 @@ const services = [
   {
     icon: Users,
     title: "Creative Strategy",
-    desc: "Clear messaging, ad hooks, visuals, and content direction that support serious performance campaigns.",
+    desc: "Clear messaging, hooks, visuals, and content direction that support serious performance campaigns.",
   },
 ];
 
@@ -50,17 +50,17 @@ const processItems = [
   {
     icon: Rocket,
     title: "Discover",
-    desc: "We understand your institute, your audience, your admissions cycle, and your growth goal.",
+    desc: "We understand your institute, your audience, your admissions cycle, and your growth goals.",
   },
   {
     icon: BarChart3,
     title: "Build",
-    desc: "We create the campaign structure, creative angle, messaging, and lead flow around that goal.",
+    desc: "We shape the campaign structure, landing flow, messaging, and creative around that target.",
   },
   {
     icon: CheckCircle2,
     title: "Scale",
-    desc: "We optimize, improve, and grow based on actual numbers instead of random activity.",
+    desc: "We optimize, improve, and grow based on numbers, not noise.",
   },
 ];
 
@@ -118,6 +118,8 @@ const disclaimerSections = [
   },
 ];
 
+const particles = Array.from({ length: 16 }, (_, i) => i + 1);
+
 function SiteShell({ children }) {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -127,10 +129,7 @@ function SiteShell({ children }) {
   const sectionLink = (id) => (isHome ? `#${id}` : `/#${id}`);
 
   useEffect(() => {
-    const onScroll = () => {
-      setIsScrolled(window.scrollY > 14);
-    };
-
+    const onScroll = () => setIsScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
@@ -151,20 +150,32 @@ function SiteShell({ children }) {
     <div className="site-shell">
       <div className="site-background" aria-hidden="true">
         <div className="grid-layer" />
-        <div className="light-orb light-a" />
-        <div className="light-orb light-b" />
-        <div className="light-orb light-c" />
+        <div className="noise-layer" />
+        <div className="aurora aurora-a" />
+        <div className="aurora aurora-b" />
+        <div className="aurora aurora-c" />
+        <div className="beam beam-a" />
+        <div className="beam beam-b" />
+        <div className="beam beam-c" />
         <div className="scan-band" />
+        <div className="pulse-ring pulse-ring-a" />
+        <div className="pulse-ring pulse-ring-b" />
         <div className="vline v1" />
         <div className="vline v2" />
         <div className="vline v3" />
+
+        <div className="particle-field">
+          {particles.map((n) => (
+            <span key={n} className={`particle p-${n}`} />
+          ))}
+        </div>
       </div>
 
       <header className={`site-header ${isScrolled ? "scrolled" : ""}`}>
         <div className="container-shell header-shell">
           <Link to="/" className="brand-logo" aria-label="Katalyst Rise home">
-            <img src="/logo.svg" alt="Katalyst Rise" className="brand-logo-img" />
-            </Link>
+            <img src="/logo-full.png" alt="Katalyst Rise" className="brand-logo-img" />
+          </Link>
 
           <nav className="top-nav">
             <a href={sectionLink("services")}>Services</a>
@@ -223,7 +234,7 @@ function SiteShell({ children }) {
 
         <div className="mobile-menu-footer">
           <p className="mobile-menu-note">
-            Lead generation and admissions-focused campaign systems for institutes.
+            Admissions-focused growth systems, paid campaigns, and sharper inquiry generation for institutes.
           </p>
 
           <a
@@ -241,7 +252,7 @@ function SiteShell({ children }) {
       <footer className="site-footer">
         <div className="container-shell footer-grid">
           <div>
-            <h3 className="footer-brand">Katalyst Rise</h3>
+            <img src="/logo-full.png" alt="Katalyst Rise" className="footer-brand-img" />
             <p className="footer-copy">
               Lead generation and ad campaigns for institutes with sharper strategy,
               stronger creative, and admissions-focused execution.
@@ -252,7 +263,7 @@ function SiteShell({ children }) {
             <p className="footer-label">Contact</p>
             <div className="footer-links">
               <p><Mail size={15} /> partnerships@risekatalyst.com</p>
-              <p><Phone size={15} /> +91 9162577476</p>
+              <p><Phone size={15} /> +91 7322057668</p>
             </div>
           </div>
 
@@ -285,13 +296,14 @@ function SectionTitle({ eyebrow, title, copy }) {
 function HeroDashboard() {
   return (
     <div className="hero-dashboard">
-      <div className="dashboard-shell float-soft">
+      <div className="dashboard-shell">
+        <div className="dashboard-glow" />
         <div className="dashboard-head">
           <div>
             <p className="dashboard-kicker">Live Growth View</p>
             <h3>Admissions Engine</h3>
           </div>
-          <span className="status-pill pulse-soft">Active</span>
+          <span className="status-pill">Active</span>
         </div>
 
         <div className="metrics-grid">
@@ -320,6 +332,7 @@ function HeroDashboard() {
             <div className="signal-ring ring-1" />
             <div className="signal-ring ring-2" />
             <div className="signal-ring ring-3" />
+            <div className="signal-sweep" />
             <div className="signal-vertical" />
             <div className="signal-dot" />
           </div>
@@ -339,116 +352,136 @@ function HomePage() {
     () => {
       const isMobile = window.matchMedia("(max-width: 759px)").matches;
 
-      const intro = gsap.timeline({
-        defaults: { ease: "power3.out" },
-      });
+      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       intro
         .from(".hero-kicker", {
-          y: isMobile ? 12 : 20,
+          y: isMobile ? 14 : 20,
           opacity: 0,
-          duration: isMobile ? 0.3 : 0.45,
+          duration: isMobile ? 0.4 : 0.55,
         })
         .from(
           ".hero-line",
           {
-            yPercent: isMobile ? 70 : 110,
+            yPercent: isMobile ? 90 : 115,
             opacity: 0,
-            duration: isMobile ? 0.5 : 0.8,
-            stagger: isMobile ? 0.08 : 0.12,
-          },
-          "-=0.05"
-        )
-        .from(
-          ".hero-copy",
-          {
-            y: isMobile ? 10 : 18,
-            opacity: 0,
-            duration: isMobile ? 0.35 : 0.5,
-          },
-          "-=0.25"
-        )
-        .from(
-          ".hero-actions a",
-          {
-            y: isMobile ? 8 : 14,
-            opacity: 0,
-            duration: isMobile ? 0.28 : 0.35,
-            stagger: 0.08,
-          },
-          "-=0.15"
-        )
-        .from(
-          ".hero-chip",
-          {
-            y: isMobile ? 6 : 12,
-            opacity: 0,
-            duration: isMobile ? 0.22 : 0.28,
-            stagger: 0.05,
+            duration: isMobile ? 0.65 : 0.9,
+            stagger: 0.12,
           },
           "-=0.1"
         )
         .from(
+          ".hero-copy",
+          {
+            y: 20,
+            opacity: 0,
+            duration: isMobile ? 0.45 : 0.55,
+          },
+          "-=0.35"
+        )
+        .from(
+          ".hero-actions a",
+          {
+            y: 18,
+            opacity: 0,
+            duration: 0.35,
+            stagger: 0.1,
+          },
+          "-=0.2"
+        )
+        .from(
+          ".hero-chip",
+          {
+            y: 14,
+            opacity: 0,
+            duration: 0.28,
+            stagger: 0.05,
+          },
+          "-=0.15"
+        )
+        .from(
           ".hero-dashboard",
           {
-            y: isMobile ? 14 : 26,
+            y: isMobile ? 18 : 30,
             opacity: 0,
-            duration: isMobile ? 0.45 : 0.7,
+            scale: 0.985,
+            duration: isMobile ? 0.55 : 0.8,
           },
-          "-=0.25"
+          "-=0.3"
         )
         .from(
           ".metric-card",
           {
-            y: isMobile ? 8 : 16,
+            y: 18,
             opacity: 0,
-            duration: isMobile ? 0.25 : 0.4,
-            stagger: 0.06,
+            duration: 0.35,
+            stagger: 0.08,
           },
-          "-=0.2"
+          "-=0.35"
         );
 
       if (!isMobile) {
         gsap.to(".scan-band", {
-          x: "130vw",
-          duration: 11,
+          x: "140vw",
+          duration: 7,
           ease: "none",
           repeat: -1,
         });
 
         gsap.to(".signal-dot", {
           y: -138,
-          duration: 2.3,
+          duration: 2.2,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
         });
 
-        gsap.to(".light-a", {
-          x: 36,
-          y: 28,
+        gsap.to(".aurora-a", {
+          x: 40,
+          y: -18,
           duration: 10,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
         });
 
-        gsap.to(".light-b", {
-          x: -30,
-          y: 22,
-          duration: 12,
+        gsap.to(".aurora-b", {
+          x: -36,
+          y: 26,
+          duration: 11,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
         });
 
-        gsap.to(".light-c", {
-          x: 20,
-          y: -24,
-          duration: 11,
+        gsap.to(".aurora-c", {
+          x: 18,
+          y: -28,
+          duration: 13,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
+        });
+
+        gsap.to(".beam-a", {
+          x: "120vw",
+          duration: 10,
+          ease: "none",
+          repeat: -1,
+        });
+
+        gsap.to(".beam-b", {
+          x: "-120vw",
+          duration: 12,
+          ease: "none",
+          repeat: -1,
+        });
+
+        gsap.to(".beam-c", {
+          x: "90vw",
+          duration: 9,
+          ease: "none",
+          repeat: -1,
         });
 
         ScrollTrigger.matchMedia({
@@ -462,8 +495,8 @@ function HomePage() {
                   scrub: 1,
                 },
               })
-              .to(".hero-copy-col", { yPercent: -10, opacity: 0.6 }, 0)
-              .to(".hero-dashboard", { yPercent: 12, scale: 1.03 }, 0);
+              .to(".hero-copy-col", { yPercent: -8, opacity: 0.75 }, 0)
+              .to(".hero-dashboard", { yPercent: 10, scale: 1.03 }, 0);
           },
         });
       }
@@ -472,10 +505,10 @@ function HomePage() {
         const delay = Number(element.dataset.delay || 0);
 
         gsap.from(element, {
-          y: isMobile ? 18 : 34,
+          y: isMobile ? 22 : 34,
           opacity: 0,
-          scale: isMobile ? 1 : 0.985,
-          duration: isMobile ? 0.42 : 0.72,
+          scale: 0.988,
+          duration: isMobile ? 0.48 : 0.7,
           delay,
           ease: "power3.out",
           scrollTrigger: {
@@ -529,7 +562,7 @@ function HomePage() {
         <section className="hero-section">
           <div className="container-shell hero-grid">
             <div className="hero-copy-col">
-              <div className="hero-kicker">High-intent growth for institutes</div>
+              <div className="hero-kicker">Admissions growth systems for institutes</div>
 
               <h1 className="hero-title">
                 <span className="line-wrap"><span className="hero-line">Build demand.</span></span>
@@ -539,7 +572,7 @@ function HomePage() {
 
               <p className="hero-copy">
                 Katalyst Rise helps institutes generate quality leads, run sharper ad campaigns,
-                and create a cleaner admissions-focused growth system.
+                and build a stronger admissions-focused growth engine.
               </p>
 
               <div className="hero-actions">
@@ -569,18 +602,17 @@ function HomePage() {
             <SectionTitle
               eyebrow="Services"
               title="What we actually build"
-              copy="Campaign systems, ad execution, and conversion journeys focused on better inquiries and stronger admissions growth."
+              copy="Campaign systems, paid execution, and conversion journeys designed to improve inquiry quality and admissions growth."
             />
 
             <div className="services-grid">
               {services.map((service, index) => {
                 const Icon = service.icon;
-
                 return (
                   <div
                     key={service.title}
                     className="service-card reveal-block"
-                    data-delay={index * 0.06}
+                    data-delay={index * 0.05}
                   >
                     <div className="icon-box">
                       <Icon size={24} />
@@ -602,13 +634,12 @@ function HomePage() {
             <SectionTitle
               eyebrow="Process"
               title="A clear path from attention to admission"
-              copy="No filler. Just a straightforward operating model that turns marketing into measurable growth."
+              copy="No filler. Just a focused operating model that turns marketing activity into measurable growth."
             />
 
             <div className="process-grid">
               {processItems.map((item, index) => {
                 const Icon = item.icon;
-
                 return (
                   <div
                     key={item.title}
@@ -641,7 +672,7 @@ function HomePage() {
                 <div
                   key={member.name}
                   className="team-card reveal-block"
-                  data-delay={index * 0.06}
+                  data-delay={index * 0.05}
                 >
                   <div className="team-top">
                     <div className="team-mark">{member.name.charAt(0)}</div>
@@ -702,7 +733,7 @@ function HomePage() {
                 </form>
 
                 <div className="contact-side">
-                  <div className="contact-benefit-card reveal-block" data-delay={0.06}>
+                  <div className="contact-benefit-card reveal-block" data-delay={0.08}>
                     <p className="section-eyebrow small-left">What you get</p>
 
                     <div className="benefit-list">
@@ -737,7 +768,7 @@ function HomePage() {
                       </div>
                       <div>
                         <p className="meta-label">Phone</p>
-                        <p className="meta-value">+91 9162577476</p>
+                        <p className="meta-value">+91 7322057668</p>
                       </div>
                     </div>
                   </div>
@@ -756,7 +787,7 @@ function LegalPage({ title, icon: Icon, sections }) {
     <SiteShell>
       <main className="standard-section">
         <div className="container-shell">
-          <div className="legal-panel">
+          <div className="legal-panel reveal-block">
             <div className="legal-head">
               <div className="icon-box">
                 <Icon size={22} />
@@ -765,8 +796,8 @@ function LegalPage({ title, icon: Icon, sections }) {
             </div>
 
             <div className="legal-content">
-              {sections.map((section) => (
-                <div key={section.title}>
+              {sections.map((section, index) => (
+                <div key={section.title} className="reveal-block" data-delay={index * 0.05}>
                   <h2>{section.title}</h2>
                   <p>{section.text}</p>
                 </div>
