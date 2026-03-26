@@ -1,0 +1,23 @@
+<svg width="420" height="96" viewBox="0 0 420 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="krGrad" x1="8" y1="8" x2="88" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DCE6FF"/>
+      <stop offset="0.45" stop-color="#8EA9FF"/>
+      <stop offset="1" stop-color="#6F93FF"/>
+    </linearGradient>
+    <linearGradient id="krStroke" x1="12" y1="12" x2="84" y2="84" gradientUnits="userSpaceOnUse">
+      <stop stop-color="rgba(255,255,255,0.9)"/>
+      <stop offset="1" stop-color="rgba(142,169,255,0.9)"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="8" y="8" width="80" height="80" rx="24" fill="#0F1218"/>
+  <rect x="8.75" y="8.75" width="78.5" height="78.5" rx="23.25" stroke="url(#krStroke)" stroke-opacity="0.35" stroke-width="1.5"/>
+
+  <path d="M30 27.5C30 25.567 31.567 24 33.5 24H39C40.933 24 42.5 25.567 42.5 27.5V44.7L58.2 26.2C58.865 25.417 59.841 24.968 60.868 24.968H67.463C70.463 24.968 72.08 28.491 70.129 30.77L55.18 48.224L71.11 65.405C73.235 67.697 71.61 71.401 68.485 71.401H61.513C60.525 71.401 59.585 70.984 58.921 70.252L42.5 52.147V68.5C42.5 70.433 40.933 72 39 72H33.5C31.567 72 30 70.433 30 68.5V27.5Z" fill="url(#krGrad)"/>
+
+  <g fill="#F5F7FB">
+    <text x="108" y="44" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="-0.04em">Katalyst Rise</text>
+    <text x="108" y="66" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600" letter-spacing="0.22em" fill="#8EA9FF">GROWTH SYSTEMS FOR INSTITUTES</text>
+  </g>
+</svg>

@@ -1,105 +1,90 @@
-import { useState } from "react";
-import { Routes, Route, Link } from "react-router";
-import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
-  Menu,
-  X,
+  ArrowRight,
   Megaphone,
   BarChart3,
   GraduationCap,
   Users,
-  ArrowRight,
-  ShieldCheck,
-  FileText,
-  BadgeHelp,
-  Send,
-  Mail,
-  Phone,
-  Sparkles,
   Rocket,
   CheckCircle2,
-  LayoutDashboard,
-  ChevronRight,
-  Quote,
+  FileText,
+  ShieldCheck,
+  BadgeHelp,
+  Mail,
+  Phone,
+  Send,
+  Menu,
+  X,
 } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const services = [
   {
     icon: Megaphone,
     title: "Lead Generation",
-    desc: "Qualified student and admission leads for institutes through sharper targeting, messaging, and funnel flow.",
+    desc: "Qualified student and admission leads for institutes through sharper targeting, better campaign structure, and stronger inquiry intent.",
   },
   {
     icon: BarChart3,
-    title: "Ad Campaign Management",
-    desc: "Meta and Google campaigns planned, launched, and optimized for better inquiry quality and stronger ROI.",
+    title: "Performance Ads",
+    desc: "Meta and Google campaigns designed for reach, inquiry quality, and scalable return on ad spend.",
   },
   {
     icon: GraduationCap,
     title: "Admission Funnels",
-    desc: "Landing journeys designed to turn attention into inquiries, counseling calls, and admissions growth.",
+    desc: "Landing journeys built to convert attention into inquiries, counseling calls, and admission growth.",
   },
   {
     icon: Users,
     title: "Creative Strategy",
-    desc: "Campaign visuals, hooks, content direction, and creative execution that feel strong and sell clearly.",
+    desc: "Clear messaging, ad hooks, visuals, and content direction that support serious performance campaigns.",
   },
 ];
 
-const process = [
+const processItems = [
   {
     icon: Rocket,
     title: "Discover",
-    desc: "We understand your institute, audience, and admissions goals before anything goes live.",
+    desc: "We understand your institute, your audience, your admissions cycle, and your growth goal.",
   },
   {
-    icon: LayoutDashboard,
+    icon: BarChart3,
     title: "Build",
-    desc: "We create messaging, campaign structure, ad creatives, and conversion flow around those goals.",
+    desc: "We create the campaign structure, creative angle, messaging, and lead flow around that goal.",
   },
   {
     icon: CheckCircle2,
     title: "Scale",
-    desc: "We launch, optimize, and improve performance using real numbers, not guesswork.",
+    desc: "We optimize, improve, and grow based on actual numbers instead of random activity.",
   },
 ];
 
 const team = [
-  { name: "Gaurav Modi", role: "Founder", focus: ["Leadership", "Strategy"] },
-  { name: "Ayush Pandey", role: "Co-Founder", focus: ["Operations", "Growth"] },
-  { name: "Sarthak Singh", role: "Developer & Head Executive", focus: ["Development", "Execution"] },
-  { name: "Kaushal Yadav", role: "HR Head Manager", focus: ["People", "Management"] },
-  { name: "Rahul Kumar", role: "IT Support Manager & Sales Manager", focus: ["Support", "Sales"] },
-  { name: "Shivam", role: "Architect Designer & Head Editor", focus: ["Design", "Editing"] },
-];
-
-const testimonials = [
-  {
-    name: "Education Brand Team",
-    quote: "Clear communication, structured execution, and better-quality inquiries than our earlier campaigns.",
-  },
-  {
-    name: "Admissions Team",
-    quote: "The strategy felt more focused and performance-driven instead of random marketing activity.",
-  },
-  {
-    name: "Growth Collaboration",
-    quote: "The system looked cleaner, worked better on mobile, and gave us a stronger first impression online.",
-  },
+  { name: "Gaurav Modi", role: "Founder", tags: ["Leadership", "Strategy"] },
+  { name: "Ayush Pandey", role: "Co-Founder", tags: ["Operations", "Growth"] },
+  { name: "Sarthak Singh", role: "Developer & Head Executive", tags: ["Development", "Execution"] },
+  { name: "Kaushal Yadav", role: "HR Head Manager", tags: ["People", "Management"] },
+  { name: "Rahul", role: "IT Support Manager & Sales Manager", tags: ["Support", "Sales"] },
+  { name: "Shivam", role: "Architect Designer & Head Editor", tags: ["Design", "Editing"] },
 ];
 
 const privacySections = [
   {
     title: "Information We Collect",
-    text: "We may collect your name, email address, phone number, institute details, and the message you submit through our contact form.",
+    text: "We may collect your name, email address, phone number, institute details, and any message submitted through this website.",
   },
   {
     title: "How We Use Information",
-    text: "We use this information to respond to inquiries, discuss services, improve communication, and support our business operations.",
+    text: "We use submitted information to respond to inquiries, discuss services, improve communication, and support our business operations.",
   },
   {
     title: "Sharing of Information",
-    text: "We do not sell personal information. We may use trusted service providers or tools only when necessary to operate our services.",
+    text: "We do not sell personal information. We may use trusted tools or service providers only where necessary to operate our services.",
   },
 ];
 
@@ -110,170 +95,170 @@ const termsSections = [
   },
   {
     title: "Service Scope",
-    text: "All service descriptions on this website are general. Final pricing, deliverables, timelines, and scope depend on direct agreement.",
+    text: "All service descriptions on this website are general. Final pricing, deliverables, scope, and timelines depend on direct agreement.",
   },
   {
     title: "Ownership",
-    text: "The branding, layout, design, and original content of this website belong to Katalyst Rise unless stated otherwise.",
+    text: "The branding, design, layout, and original content of this website belong to Katalyst Rise unless stated otherwise.",
   },
 ];
 
 const disclaimerSections = [
   {
     title: "No Guaranteed Results",
-    text: "Marketing outcomes depend on many factors. We do not guarantee a fixed number of leads, admissions, or revenue.",
+    text: "Marketing performance depends on many factors. We do not guarantee a fixed number of leads, admissions, or revenue.",
   },
   {
     title: "Third-Party Platforms",
-    text: "This website may mention or use third-party platforms such as Google and Meta. We are not responsible for their policy or product changes.",
+    text: "This website may mention platforms such as Google and Meta. We are not responsible for their policy or product changes.",
   },
   {
     title: "General Information",
-    text: "The content on this website is for general informational purposes and should not be treated as legal, financial, or regulatory advice.",
+    text: "The content on this website is for informational purposes and should not be treated as legal, financial, or regulatory advice.",
   },
 ];
 
-function AnimatedBackground() {
-  return (
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-[#05070b]" />
-      <div className="bg-grid absolute inset-0 opacity-35" />
+function SiteShell({ children }) {
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-      <motion.div
-        className="absolute left-[-12%] top-[8%] h-[28rem] w-[28rem] rounded-full bg-cyan-500/14 blur-[120px]"
-        animate={{ x: [0, 40, 0], y: [0, 34, 0], scale: [1, 1.06, 1] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute right-[-10%] top-[18%] h-[30rem] w-[30rem] rounded-full bg-fuchsia-500/12 blur-[130px]"
-        animate={{ x: [0, -34, 0], y: [0, 30, 0], scale: [1, 1.05, 1] }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-12%] left-[24%] h-[26rem] w-[26rem] rounded-full bg-blue-500/12 blur-[120px]"
-        animate={{ x: [0, 20, 0], y: [0, -28, 0], scale: [1, 1.08, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-      />
+  const isHome = location.pathname === "/";
+  const sectionLink = (id) => (isHome ? `#${id}` : `/#${id}`);
 
-      <motion.div
-        className="absolute inset-x-0 top-[24%] h-px bg-gradient-to-r from-transparent via-cyan-300/40 to-transparent"
-        animate={{ opacity: [0.15, 0.45, 0.15], scaleX: [0.92, 1, 0.92] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 14);
+    };
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(5,7,11,0.2)_48%,#05070b_85%)]" />
-    </div>
-  );
-}
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-function SectionIntro({ tag, title, desc }) {
-  return (
-    <div className="mx-auto mb-12 max-w-3xl text-center">
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-300 sm:text-xs">
-        {tag}
-      </p>
-      <h2 className="text-3xl font-black leading-tight sm:text-4xl md:text-5xl">
-        {title}
-      </h2>
-      <p className="mt-4 text-sm leading-7 text-white/68 md:text-base">
-        {desc}
-      </p>
-    </div>
-  );
-}
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname, location.hash]);
 
-function Shell({ children }) {
-  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
 
   return (
-    <div className="min-h-screen overflow-x-hidden text-white">
-      <AnimatedBackground />
+    <div className="site-shell">
+      <div className="site-background" aria-hidden="true">
+        <div className="grid-layer" />
+        <div className="light-orb light-a" />
+        <div className="light-orb light-b" />
+        <div className="light-orb light-c" />
+        <div className="scan-band" />
+        <div className="vline v1" />
+        <div className="vline v2" />
+        <div className="vline v3" />
+      </div>
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 md:px-6">
-          <Link to="/" className="text-2xl font-black tracking-tight md:text-3xl">
-            Katalyst Rise
-          </Link>
+      <header className={`site-header ${isScrolled ? "scrolled" : ""}`}>
+        <div className="container-shell header-shell">
+          <Link to="/" className="brand-logo" aria-label="Katalyst Rise home">
+            <img src="/logo.svg" alt="Katalyst Rise" className="brand-logo-img" />
+            </Link>
 
-          <nav className="hidden items-center gap-7 text-sm text-white/75 md:flex">
-            <a href="/#services" className="transition hover:text-white">Services</a>
-            <a href="/#process" className="transition hover:text-white">Process</a>
-            <a href="/#team" className="transition hover:text-white">Team</a>
-            <a href="/#contact" className="transition hover:text-white">Contact</a>
-            <Link to="/privacy" className="transition hover:text-white">Privacy</Link>
+          <nav className="top-nav">
+            <a href={sectionLink("services")}>Services</a>
+            <a href={sectionLink("process")}>Process</a>
+            <a href={sectionLink("team")}>Team</a>
+            <a href={sectionLink("contact")}>Contact</a>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/terms">Terms</Link>
+            <Link to="/disclaimer">Disclaimer</Link>
           </nav>
 
           <button
-            onClick={() => setOpen(true)}
-            className="flex h-14 w-14 items-center justify-center rounded-[22px] border border-white/10 bg-white/5 shadow-xl md:hidden"
+            type="button"
+            className="menu-toggle"
             aria-label="Open menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(true)}
           >
-            <Menu size={28} />
+            <Menu size={20} />
           </button>
         </div>
       </header>
 
-      {open ? (
-        <button
-          aria-label="Close menu backdrop"
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 z-[55] bg-black/60 md:hidden"
-        />
-      ) : null}
-
       <div
-        className={`fixed right-0 top-0 z-[60] h-screen w-[82%] max-w-sm border-l border-white/10 bg-[#0b0d12] p-6 shadow-2xl transition-transform duration-200 ease-out md:hidden ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="mb-8 flex items-center justify-between">
-          <span className="text-xl font-bold">Menu</span>
+        className={`mobile-menu-overlay ${menuOpen ? "open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      <aside className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        <div className="mobile-menu-top">
+          <div className="mobile-menu-title">Menu</div>
           <button
-            onClick={() => setOpen(false)}
-            className="rounded-2xl border border-white/10 bg-white/5 p-2"
+            type="button"
+            className="menu-close"
             aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
           >
-            <X size={22} />
+            <X size={18} />
           </button>
         </div>
 
-        <div className="flex flex-col gap-5 text-base text-white/82">
-          <a href="/#services" onClick={() => setOpen(false)}>Services</a>
-          <a href="/#process" onClick={() => setOpen(false)}>Process</a>
-          <a href="/#team" onClick={() => setOpen(false)}>Team</a>
-          <a href="/#contact" onClick={() => setOpen(false)}>Contact</a>
-          <Link to="/privacy" onClick={() => setOpen(false)}>Privacy Policy</Link>
-          <Link to="/terms" onClick={() => setOpen(false)}>Terms & Conditions</Link>
-          <Link to="/disclaimer" onClick={() => setOpen(false)}>Disclaimer</Link>
+        <div className="mobile-menu-links">
+          <a href={sectionLink("services")} onClick={() => setMenuOpen(false)}>Services</a>
+          <a href={sectionLink("process")} onClick={() => setMenuOpen(false)}>Process</a>
+          <a href={sectionLink("team")} onClick={() => setMenuOpen(false)}>Team</a>
+          <a href={sectionLink("contact")} onClick={() => setMenuOpen(false)}>Contact</a>
         </div>
-      </div>
 
-      <div className="relative z-10">{children}</div>
+        <div className="mobile-menu-divider" />
 
-      <footer className="border-t border-white/10 px-4 py-10">
-        <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-3 md:px-6">
+        <div className="mobile-legal-links">
+          <Link to="/privacy" onClick={() => setMenuOpen(false)}>Privacy</Link>
+          <Link to="/terms" onClick={() => setMenuOpen(false)}>Terms</Link>
+          <Link to="/disclaimer" onClick={() => setMenuOpen(false)}>Disclaimer</Link>
+        </div>
+
+        <div className="mobile-menu-footer">
+          <p className="mobile-menu-note">
+            Lead generation and admissions-focused campaign systems for institutes.
+          </p>
+
+          <a
+            href={sectionLink("contact")}
+            className="primary-btn"
+            onClick={() => setMenuOpen(false)}
+          >
+            Start a Project <ArrowRight size={18} />
+          </a>
+        </div>
+      </aside>
+
+      {children}
+
+      <footer className="site-footer">
+        <div className="container-shell footer-grid">
           <div>
-            <h3 className="text-xl font-bold">Katalyst Rise</h3>
-            <p className="mt-3 text-sm leading-7 text-white/65">
-              Lead generation and paid ads for institutes with a stronger admissions-focused growth system.
+            <h3 className="footer-brand">Katalyst Rise</h3>
+            <p className="footer-copy">
+              Lead generation and ad campaigns for institutes with sharper strategy,
+              stronger creative, and admissions-focused execution.
             </p>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">
-              Contact
-            </h4>
-            <div className="mt-4 space-y-3 text-sm text-white/70">
-              <p className="flex items-center gap-2"><Mail size={16} /> Partnerships@risekatalyst.com</p>
-              <p className="flex items-center gap-2"><Phone size={16} /> +91 your-number</p>
+            <p className="footer-label">Contact</p>
+            <div className="footer-links">
+              <p><Mail size={15} /> partnerships@risekatalyst.com</p>
+              <p><Phone size={15} /> +91 9162577476</p>
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">
-              Legal
-            </h4>
-            <div className="mt-4 flex flex-col gap-3 text-sm text-white/70">
+            <p className="footer-label">Legal</p>
+            <div className="footer-nav">
               <Link to="/privacy">Privacy Policy</Link>
               <Link to="/terms">Terms & Conditions</Link>
               <Link to="/disclaimer">Disclaimer</Link>
@@ -281,73 +266,228 @@ function Shell({ children }) {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 pt-6 text-center text-sm text-white/45 md:px-6">
-          © 2026 Katalyst Rise. All rights reserved.
-        </div>
+        <div className="footer-bottom">© 2026 Katalyst Rise. All rights reserved.</div>
       </footer>
     </div>
   );
 }
 
-function HeroVisual() {
+function SectionTitle({ eyebrow, title, copy }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.85 }}
-      className="relative lg:ml-auto lg:max-w-[560px]"
-    >
-      <div className="glass-card hero-ring relative overflow-hidden rounded-[32px] p-5 sm:p-6">
-        <div className="soft-line absolute inset-x-10 top-0 h-px" />
+    <div className="section-title reveal-block">
+      <p className="section-eyebrow">{eyebrow}</p>
+      <h2>{title}</h2>
+      <p>{copy}</p>
+    </div>
+  );
+}
 
-        <div className="rounded-[28px] border border-white/10 bg-black/25 p-4 sm:p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
-                Live Dashboard
-              </p>
-              <h3 className="mt-2 text-xl font-bold">Admissions Growth View</h3>
-            </div>
-            <Sparkles className="text-cyan-300" size={20} />
+function HeroDashboard() {
+  return (
+    <div className="hero-dashboard">
+      <div className="dashboard-shell float-soft">
+        <div className="dashboard-head">
+          <div>
+            <p className="dashboard-kicker">Live Growth View</p>
+            <h3>Admissions Engine</h3>
           </div>
+          <span className="status-pill pulse-soft">Active</span>
+        </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              ["25+", "Campaigns Managed", 62],
-              ["10+", "Institutes Supported", 76],
-              ["1.25K+", "Leads Generated", 84],
-              ["24/7", "Growth Mindset", 92],
-            ].map(([num, label, width], index) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.12 * index }}
-                className="rounded-[24px] border border-white/10 bg-[#090b10] p-5"
-              >
-                <p className="text-4xl font-black text-cyan-300">{num}</p>
-                <p className="mt-2 text-sm text-white/60">{label}</p>
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/6">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-cyan-300 to-fuchsia-300"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${width}%` }}
-                    transition={{ delay: 0.2 * index, duration: 1 }}
-                  />
-                </div>
-              </motion.div>
-            ))}
+        <div className="metrics-grid">
+          {[
+            ["25+", "Campaigns Managed", 0.68],
+            ["10+", "Institutes Supported", 0.74],
+            ["1.25K+", "Leads Generated", 0.82],
+            ["24/7", "Optimization Flow", 0.9],
+          ].map(([number, label, progress], index) => (
+            <div key={label} className={`metric-card metric-card-${index}`}>
+              <p className="metric-number">{number}</p>
+              <p className="metric-label">{label}</p>
+              <div className="metric-track">
+                <div className="metric-fill" style={{ transform: `scaleX(${progress})` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="signal-panel">
+          <div className="signal-head">
+            <span>Campaign Direction</span>
+            <span>Admissions Focused</span>
+          </div>
+          <div className="signal-stage">
+            <div className="signal-ring ring-1" />
+            <div className="signal-ring ring-2" />
+            <div className="signal-ring ring-3" />
+            <div className="signal-vertical" />
+            <div className="signal-dot" />
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 function HomePage() {
+  const scope = useRef(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState("");
+
+  useGSAP(
+    () => {
+      const isMobile = window.matchMedia("(max-width: 759px)").matches;
+
+      const intro = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
+
+      intro
+        .from(".hero-kicker", {
+          y: isMobile ? 12 : 20,
+          opacity: 0,
+          duration: isMobile ? 0.3 : 0.45,
+        })
+        .from(
+          ".hero-line",
+          {
+            yPercent: isMobile ? 70 : 110,
+            opacity: 0,
+            duration: isMobile ? 0.5 : 0.8,
+            stagger: isMobile ? 0.08 : 0.12,
+          },
+          "-=0.05"
+        )
+        .from(
+          ".hero-copy",
+          {
+            y: isMobile ? 10 : 18,
+            opacity: 0,
+            duration: isMobile ? 0.35 : 0.5,
+          },
+          "-=0.25"
+        )
+        .from(
+          ".hero-actions a",
+          {
+            y: isMobile ? 8 : 14,
+            opacity: 0,
+            duration: isMobile ? 0.28 : 0.35,
+            stagger: 0.08,
+          },
+          "-=0.15"
+        )
+        .from(
+          ".hero-chip",
+          {
+            y: isMobile ? 6 : 12,
+            opacity: 0,
+            duration: isMobile ? 0.22 : 0.28,
+            stagger: 0.05,
+          },
+          "-=0.1"
+        )
+        .from(
+          ".hero-dashboard",
+          {
+            y: isMobile ? 14 : 26,
+            opacity: 0,
+            duration: isMobile ? 0.45 : 0.7,
+          },
+          "-=0.25"
+        )
+        .from(
+          ".metric-card",
+          {
+            y: isMobile ? 8 : 16,
+            opacity: 0,
+            duration: isMobile ? 0.25 : 0.4,
+            stagger: 0.06,
+          },
+          "-=0.2"
+        );
+
+      if (!isMobile) {
+        gsap.to(".scan-band", {
+          x: "130vw",
+          duration: 11,
+          ease: "none",
+          repeat: -1,
+        });
+
+        gsap.to(".signal-dot", {
+          y: -138,
+          duration: 2.3,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(".light-a", {
+          x: 36,
+          y: 28,
+          duration: 10,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(".light-b", {
+          x: -30,
+          y: 22,
+          duration: 12,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        gsap.to(".light-c", {
+          x: 20,
+          y: -24,
+          duration: 11,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+
+        ScrollTrigger.matchMedia({
+          "(min-width: 900px)": () => {
+            gsap
+              .timeline({
+                scrollTrigger: {
+                  trigger: ".hero-section",
+                  start: "top top",
+                  end: "bottom top",
+                  scrub: 1,
+                },
+              })
+              .to(".hero-copy-col", { yPercent: -10, opacity: 0.6 }, 0)
+              .to(".hero-dashboard", { yPercent: 12, scale: 1.03 }, 0);
+          },
+        });
+      }
+
+      gsap.utils.toArray(".reveal-block").forEach((element) => {
+        const delay = Number(element.dataset.delay || 0);
+
+        gsap.from(element, {
+          y: isMobile ? 18 : 34,
+          opacity: 0,
+          scale: isMobile ? 1 : 0.985,
+          duration: isMobile ? 0.42 : 0.72,
+          delay,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: element,
+            start: isMobile ? "top 92%" : "top 86%",
+            once: true,
+          },
+        });
+      });
+    },
+    { scope }
+  );
 
   async function submitForm(e) {
     e.preventDefault();
@@ -371,7 +511,7 @@ function HomePage() {
       }
 
       if (!res.ok) {
-        throw new Error(data.error || "Form backend is not available in Vite preview yet.");
+        throw new Error(data.error || "Form backend is not available in preview yet.");
       }
 
       setDone(data.message || "Message sent successfully.");
@@ -384,278 +524,222 @@ function HomePage() {
   }
 
   return (
-    <Shell>
-      <main>
-        <section className="mx-auto max-w-7xl px-4 pb-10 pt-10 md:px-6 md:pt-16 lg:min-h-[88vh] lg:pb-16">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_.95fr]">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="inline-flex max-w-max flex-wrap items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300 sm:text-xs">
-                <Sparkles size={14} />
-                Growth Partner for Institutes
-              </div>
+    <SiteShell>
+      <main ref={scope}>
+        <section className="hero-section">
+          <div className="container-shell hero-grid">
+            <div className="hero-copy-col">
+              <div className="hero-kicker">High-intent growth for institutes</div>
 
-              <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[0.95] sm:text-6xl lg:text-7xl">
-                Growth that feels <span className="text-gradient">premium</span> and performs.
+              <h1 className="hero-title">
+                <span className="line-wrap"><span className="hero-line">Build demand.</span></span>
+                <span className="line-wrap"><span className="hero-line">Capture intent.</span></span>
+                <span className="line-wrap"><span className="hero-line accent-text">Scale admissions.</span></span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-base leading-8 text-white/68 md:text-lg">
-                Katalyst Rise helps institutes generate quality leads, run performance campaigns, and scale admissions with stronger strategy, sharper creative, and cleaner execution.
+              <p className="hero-copy">
+                Katalyst Rise helps institutes generate quality leads, run sharper ad campaigns,
+                and create a cleaner admissions-focused growth system.
               </p>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-base font-semibold text-black transition hover:scale-[1.03]"
-                >
-                  Get Started <ArrowRight size={18} />
+              <div className="hero-actions">
+                <a href="#contact" className="primary-btn">
+                  Start a Project <ArrowRight size={18} />
                 </a>
-                <a
-                  href="#services"
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-4 text-base font-semibold transition hover:scale-[1.03]"
-                >
-                  View Services
+                <a href="#services" className="secondary-btn">
+                  See Services
                 </a>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-3 text-sm text-white/72">
+              <div className="hero-chips">
                 {["Meta Ads", "Google Ads", "Admission Funnels", "Creative Strategy"].map((item) => (
-                  <span
-                    key={item}
-                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2"
-                  >
+                  <span key={item} className="hero-chip">
                     {item}
                   </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            <HeroVisual />
+            <HeroDashboard />
           </div>
         </section>
 
-        <section id="services" className="mx-auto max-w-7xl px-4 py-20 md:px-6">
-          <SectionIntro
-            tag="Services"
-            title="What we do"
-            desc="We build lead generation systems, ad campaigns, and conversion-focused growth journeys for institutes."
-          />
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.08 }}
-                  whileHover={{ y: -8, scale: 1.01 }}
-                  className="glass-card rounded-[28px] p-6"
-                >
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 to-fuchsia-400/20">
-                    <Icon size={24} className="text-cyan-200" />
-                  </div>
-
-                  <h3 className="text-xl font-semibold">{service.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-white/68">{service.desc}</p>
-
-                  <div className="mt-6 flex items-center gap-2 text-sm text-cyan-300">
-                    Learn more <ChevronRight size={16} />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section id="process" className="mx-auto max-w-7xl px-4 py-20 md:px-6">
-          <SectionIntro
-            tag="Process"
-            title="How we move from attention to admissions"
-            desc="A cleaner process creates a stronger result for your campaigns and a more credible agency presence."
-          />
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            {process.map((step, index) => {
-              const Icon = step.icon;
-              return (
-                <motion.div
-                  key={step.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass-card relative overflow-hidden rounded-[30px] p-6"
-                >
-                  <div className="absolute right-4 top-4 text-6xl font-black text-white/5">
-                    0{index + 1}
-                  </div>
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/6">
-                    <Icon size={24} className="text-cyan-300" />
-                  </div>
-                  <h3 className="text-2xl font-bold">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-white/68">{step.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section id="team" className="mx-auto max-w-7xl px-4 py-20 md:px-6">
-          <SectionIntro
-            tag="Team"
-            title="People behind Katalyst Rise"
-            desc="The team should feel like a real part of the agency, not filler."
-          />
-
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {team.map((member, index) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.07 }}
-                whileHover={{ y: -6 }}
-                className="glass-card relative overflow-hidden rounded-[28px] p-5"
-              >
-                <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-cyan-400/10 blur-3xl" />
-
-                <div className="flex items-start gap-4">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/18 to-blue-500/18 text-xl font-bold text-cyan-200">
-                    {member.name.charAt(0)}
-                  </div>
-
-                  <div className="min-w-0">
-                    <h3 className="text-xl font-semibold">{member.name}</h3>
-                    <p className="mt-1 text-sm text-cyan-300">{member.role}</p>
-                  </div>
-                </div>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {member.focus.map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-20 md:px-6">
-          <SectionIntro
-            tag="Trust"
-            title="Why this site now feels stronger"
-            desc="Clearer sections, tighter copy, better rhythm, and a more serious visual tone."
-          />
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            {testimonials.map((item, index) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-                className="glass-card rounded-[28px] p-6"
-              >
-                <Quote size={24} className="text-cyan-300" />
-                <p className="mt-4 text-sm leading-8 text-white/72">
-                  {item.quote}
-                </p>
-                <p className="mt-5 text-sm font-semibold text-white">{item.name}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <section id="contact" className="mx-auto max-w-6xl px-4 py-20 md:px-6">
-          <div className="glass-card rounded-[32px] p-6 sm:p-8 md:p-10">
-            <SectionIntro
-              tag="Contact"
-              title="Let’s turn attention into admissions"
-              desc="Tell us about your institute, goals, or campaign requirements."
+        <section id="services" className="standard-section">
+          <div className="container-shell">
+            <SectionTitle
+              eyebrow="Services"
+              title="What we actually build"
+              copy="Campaign systems, ad execution, and conversion journeys focused on better inquiries and stronger admissions growth."
             />
 
-            <div className="grid gap-8 lg:grid-cols-[1.08fr_.92fr]">
-              <motion.form
-                onSubmit={submitForm}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="grid gap-4"
-              >
-                <input
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 outline-none"
-                  placeholder="Your name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                <input
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 outline-none"
-                  placeholder="Your email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                />
-                <textarea
-                  rows="5"
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 outline-none"
-                  placeholder="Tell us about your institute or campaign goal"
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-base font-semibold text-black transition hover:scale-[1.02] disabled:opacity-70"
-                >
-                  <Send size={18} />
-                  {loading ? "Sending..." : "Send Message"}
-                </button>
-                {done ? <p className="text-sm text-cyan-300">{done}</p> : null}
-              </motion.form>
+            <div className="services-grid">
+              {services.map((service, index) => {
+                const Icon = service.icon;
 
-              <div className="grid gap-4">
-                <div className="rounded-[28px] border border-white/10 bg-black/25 p-5">
-                  <p className="text-xs uppercase tracking-[0.3em] text-cyan-300">
-                    What you get
-                  </p>
-                  <div className="mt-4 space-y-4">
-                    {[
-                      "Lead generation strategy for institutes",
-                      "Premium ad campaign planning",
-                      "Responsive website and contact funnel",
-                      "Creative execution with performance focus",
-                    ].map((item) => (
-                      <div key={item} className="flex items-start gap-3">
-                        <CheckCircle2 size={18} className="mt-1 text-cyan-300" />
-                        <p className="text-sm leading-7 text-white/68">{item}</p>
-                      </div>
+                return (
+                  <div
+                    key={service.title}
+                    className="service-card reveal-block"
+                    data-delay={index * 0.06}
+                  >
+                    <div className="icon-box">
+                      <Icon size={24} />
+                    </div>
+
+                    <div>
+                      <h3>{service.title}</h3>
+                      <p>{service.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section id="process" className="standard-section">
+          <div className="container-shell">
+            <SectionTitle
+              eyebrow="Process"
+              title="A clear path from attention to admission"
+              copy="No filler. Just a straightforward operating model that turns marketing into measurable growth."
+            />
+
+            <div className="process-grid">
+              {processItems.map((item, index) => {
+                const Icon = item.icon;
+
+                return (
+                  <div
+                    key={item.title}
+                    className="process-card reveal-block"
+                    data-delay={index * 0.08}
+                  >
+                    <div className="process-index">0{index + 1}</div>
+                    <div className="icon-box">
+                      <Icon size={24} />
+                    </div>
+                    <h3>{item.title}</h3>
+                    <p>{item.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section id="team" className="standard-section">
+          <div className="container-shell">
+            <SectionTitle
+              eyebrow="Team"
+              title="People behind Katalyst Rise"
+              copy="Meet the people driving strategy, execution, and growth at Katalyst Rise."
+            />
+
+            <div className="team-grid">
+              {team.map((member, index) => (
+                <div
+                  key={member.name}
+                  className="team-card reveal-block"
+                  data-delay={index * 0.06}
+                >
+                  <div className="team-top">
+                    <div className="team-mark">{member.name.charAt(0)}</div>
+                    <div>
+                      <h3>{member.name}</h3>
+                      <p className="team-role">{member.role}</p>
+                    </div>
+                  </div>
+
+                  <div className="team-tags">
+                    {member.tags.map((tag) => (
+                      <span key={tag} className="team-tag">
+                        {tag}
+                      </span>
                     ))}
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-white/10 bg-black/25 p-5">
-                    <Mail className="text-cyan-300" size={22} />
-                    <p className="mt-3 text-sm text-white/55">Email</p>
-                    <p className="mt-1 text-sm font-medium">Partnerships@risekatalyst.com</p>
+        <section id="contact" className="standard-section">
+          <div className="container-shell">
+            <div className="contact-panel reveal-block">
+              <SectionTitle
+                eyebrow="Contact"
+                title="Let’s build the growth system"
+                copy="Tell us about your institute, campaign requirements, or admissions goals."
+              />
+
+              <div className="contact-grid">
+                <form onSubmit={submitForm} className="contact-form">
+                  <input
+                    className="form-field"
+                    placeholder="Your name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                  <input
+                    className="form-field"
+                    placeholder="Your email"
+                    value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  />
+                  <textarea
+                    rows="5"
+                    className="form-field"
+                    placeholder="Tell us about your institute or campaign goal"
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  />
+                  <button type="submit" disabled={loading} className="primary-btn full-btn">
+                    <Send size={18} />
+                    {loading ? "Sending..." : "Send Message"}
+                  </button>
+                  {done ? <p className="form-message">{done}</p> : null}
+                </form>
+
+                <div className="contact-side">
+                  <div className="contact-benefit-card reveal-block" data-delay={0.06}>
+                    <p className="section-eyebrow small-left">What you get</p>
+
+                    <div className="benefit-list">
+                      {[
+                        "Lead generation strategy for institutes",
+                        "Performance ad campaign planning",
+                        "Responsive website and conversion flow",
+                        "Creative direction with measurable focus",
+                      ].map((item) => (
+                        <div key={item} className="benefit-row">
+                          <CheckCircle2 size={18} />
+                          <p>{item}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="rounded-[24px] border border-white/10 bg-black/25 p-5">
-                    <Phone className="text-cyan-300" size={22} />
-                    <p className="mt-3 text-sm text-white/55">Phone</p>
-                    <p className="mt-1 text-sm font-medium">+91 your-number</p>
+                  <div className="contact-meta-grid">
+                    <div className="contact-meta-card reveal-block" data-delay={0.12}>
+                      <div className="contact-meta-icon">
+                        <Mail size={20} />
+                      </div>
+                      <div>
+                        <p className="meta-label">Email</p>
+                        <p className="meta-value">partnerships@risekatalyst.com</p>
+                      </div>
+                    </div>
+
+                    <div className="contact-meta-card reveal-block" data-delay={0.18}>
+                      <div className="contact-meta-icon">
+                        <Phone size={20} />
+                      </div>
+                      <div>
+                        <p className="meta-label">Phone</p>
+                        <p className="meta-value">+91 9162577476</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -663,33 +747,35 @@ function HomePage() {
           </div>
         </section>
       </main>
-    </Shell>
+    </SiteShell>
   );
 }
 
-function LegalPage({ icon: Icon, title, sections }) {
+function LegalPage({ title, icon: Icon, sections }) {
   return (
-    <Shell>
-      <main className="mx-auto max-w-4xl px-4 py-16 md:px-6">
-        <div className="glass-card rounded-[32px] p-8 md:p-12">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="rounded-2xl bg-cyan-400/10 p-3">
-              <Icon size={22} className="text-cyan-300" />
-            </div>
-            <h1 className="text-3xl font-black md:text-4xl">{title}</h1>
-          </div>
-
-          <div className="space-y-8 text-white/75">
-            {sections.map((section) => (
-              <div key={section.title}>
-                <h2 className="text-xl font-semibold text-white">{section.title}</h2>
-                <p className="mt-3 leading-8">{section.text}</p>
+    <SiteShell>
+      <main className="standard-section">
+        <div className="container-shell">
+          <div className="legal-panel">
+            <div className="legal-head">
+              <div className="icon-box">
+                <Icon size={22} />
               </div>
-            ))}
+              <h1>{title}</h1>
+            </div>
+
+            <div className="legal-content">
+              {sections.map((section) => (
+                <div key={section.title}>
+                  <h2>{section.title}</h2>
+                  <p>{section.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>
-    </Shell>
+    </SiteShell>
   );
 }
 
@@ -699,33 +785,15 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route
         path="/privacy"
-        element={
-          <LegalPage
-            icon={ShieldCheck}
-            title="Privacy Policy"
-            sections={privacySections}
-          />
-        }
+        element={<LegalPage title="Privacy Policy" icon={ShieldCheck} sections={privacySections} />}
       />
       <Route
         path="/terms"
-        element={
-          <LegalPage
-            icon={FileText}
-            title="Terms & Conditions"
-            sections={termsSections}
-          />
-        }
+        element={<LegalPage title="Terms & Conditions" icon={FileText} sections={termsSections} />}
       />
       <Route
         path="/disclaimer"
-        element={
-          <LegalPage
-            icon={BadgeHelp}
-            title="Disclaimer"
-            sections={disclaimerSections}
-          />
-        }
+        element={<LegalPage title="Disclaimer" icon={BadgeHelp} sections={disclaimerSections} />}
       />
     </Routes>
   );
